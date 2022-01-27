@@ -1,49 +1,45 @@
-const express = require ("express")
-const app = express()
+const express = require("express");
 const path = require ("path");
 const fs = require ("fs");
 const http= require ("http");
-// const { response } = require("express");
-// const { Server, request } = require("http");
-// const database = require("mime-db");
-// const req = require("express/lib/request");
-// const res = require("express/lib/response");
+const util = require("util");
+const app = express();
 
-const port = process.env.PORT || 3003
 
 // Setting up the express Server
 app.use(express.static("public"));
-app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 
+const port = process.env.PORT || 3004;
 
 // Get notes from notes.html file
-app.get('./Develop/public/notes', (request,response)=> {
+app.get('/notes', (request,response)=> {
     response.sendFile(path.join(__dirname, "public", "notes.html"));
     console.log("retrieving notes file");
-})
+});
 
 
 // Getting index file
-app.get('./Develop/public/index', (request,response)=> {
+app.get('/', (request,response)=> {
     response.sendFile(path.join(__dirname, "public", "index.html"));
 console.log("retrieving index file");
 
-})
+});
 
 // Getting existing notes from database
-app.get('api/notes', (request,response)=> {
-    fs.readFile(path.join(dirname, "db","db.json"),"utf8", (err, jsonString) => {
+app.get('/api/notes', (request,response)=> {
+    fs.readFile(path.join(__dirname, "db","db.json"),"utf8", (err, jsonString) => {
         if (err){
             console.log ("Cannot read file:", err)
         }
 
         console.log ('File data:', jsonString);
         response.json(JSON.parse(jsonString));
-    })
+    });
 
 
-})
+});
 
 // Use the post method to collect a new note and save it to the html page body
 app.post('/api/notes', (request,response) => {
@@ -72,6 +68,7 @@ app.post('/api/notes', (request,response) => {
         console.log (err);
     }
     console.log ("Your Note was successfully added!", NotesJSON);
+    return NotesJSON;
 
     });
 });
@@ -80,7 +77,7 @@ app.post('/api/notes', (request,response) => {
 
 
 // Use the delete method of remove exisitng notes
-app.delete('/api/notes', (request, response)=> {
+app.delete('/api/notes:id', (request, response)=> {
     fs.readFile(path.join(__dirname,"db", "db.json"), 'utf8',(err,jsonString)=>{
         if (err){
             console.log("Could not read file:", err)
