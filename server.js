@@ -3,6 +3,7 @@ const path = require ("path");
 const fs = require ("fs");
 const http= require ("http");
 const util = require("util");
+const {v4 : uuidv4} = require('uuid');
 const app = express();
 
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 const port = process.env.PORT || 3004;
+
 
 // Get notes from notes.html file
 app.get('/notes', (request,response)=> {
@@ -77,7 +79,7 @@ app.post('/api/notes', (request,response) => {
 
 
 // Use the delete method of remove exisitng notes
-app.delete('/api/notes:id', (request, response)=> {
+app.delete(`/api/notes/:id`, (request, response)=> {
     fs.readFile(path.join(__dirname,"db", "db.json"), 'utf8',(err,jsonString)=>{
         if (err){
             console.log("Could not read file:", err)
@@ -90,9 +92,10 @@ app.delete('/api/notes:id', (request, response)=> {
 
     const newNote = {
         title: request.body.title,
-        text: response.body.text,
+        text: request.body.text,
+        id: uuidv4()
 
-        id: Math.random().toString(36).substring(2,9)
+        // id: Math.random().toString(36).substring(2,9)
     };
 
     notes.splice(request.params.id,1);
