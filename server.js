@@ -58,7 +58,6 @@ app.post('/api/notes', (request,response) => {
         const newNote = {
             title: request.body.title,
             text: request.body.text,
-
             id: Math.random().toString(36).substring(2,9)
         };
 
@@ -95,7 +94,6 @@ app.delete(`/api/notes/:id`, (request, response)=> {
         text: request.body.text,
         id: uuidv4()
 
-        // id: Math.random().toString(36).substring(2,9)
     };
 
     notes.splice(request.params.id,1);
