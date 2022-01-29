@@ -4,6 +4,7 @@
 
 ### macOS ###
 # General
+node_modules
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -72,3 +73,5 @@ bower_components
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
+
+node_modules
